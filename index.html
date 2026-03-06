@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Groupon MBNXT — Personalization Prototypes</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 50% 20%, #2e2e3a 0%, #111 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding: 40px 24px;
+}
+.header { text-align: center; margin-bottom: 48px; }
+.wordmark { color: #53A318; font-size: 28px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 8px; }
+.subtitle { color: rgba(255,255,255,.5); font-size: 15px; font-weight: 500; }
+
+.grid { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+
+.proto-card {
+  width: 300px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 20px; padding: 28px 24px; cursor: pointer; text-decoration: none;
+  transition: all 0.25s; display: block;
+}
+.proto-card:hover {
+  background: rgba(255,255,255,.1); border-color: rgba(83,163,24,.5);
+  transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,.4);
+}
+.proto-icon { font-size: 40px; margin-bottom: 14px; }
+.proto-tag {
+  display: inline-block; background: rgba(83,163,24,.2); color: #53A318;
+  font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 100px;
+  letter-spacing: 0.5px; margin-bottom: 10px; text-transform: uppercase;
+}
+.proto-title { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+.proto-desc  { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.6; margin-bottom: 18px; }
+.proto-variants {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.proto-variant {
+  background: rgba(255,255,255,.08); color: rgba(255,255,255,.6);
+  font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px;
+  border: 1px solid rgba(255,255,255,.1);
+}
+.proto-cta {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 20px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.08);
+  color: #53A318; font-size: 13px; font-weight: 700;
+}
+
+.footer {
+  margin-top: 48px; color: rgba(255,255,255,.25); font-size: 12px; text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="wordmark">Groupon</div>
+  <div class="subtitle">MBNXT · Personalization Prototypes</div>
+</div>
+
+<div class="grid">
+
+  <a class="proto-card" href="make-it-yours.html">
+    <div class="proto-icon">✨</div>
+    <div class="proto-tag">Preference Collection</div>
+    <div class="proto-title">Make It Yours</div>
+    <div class="proto-desc">Soft onboarding flows that collect user preferences to personalize the deal feed — 9 variants across bottom sheet and inline card patterns.</div>
+    <div class="proto-variants">
+      <span class="proto-variant">Pill Flow</span>
+      <span class="proto-variant">Quiz Mode</span>
+      <span class="proto-variant">All-in-One</span>
+      <span class="proto-variant">Vibe Check</span>
+      <span class="proto-variant">+5 inline</span>
+    </div>
+    <div class="proto-cta"><span>Open prototype</span><span>→</span></div>
+  </a>
+
+  <a class="proto-card" href="browse-to-buy.html">
+    <div class="proto-icon">🔥</div>
+    <div class="proto-tag">Urgency Re-entry</div>
+    <div class="proto-title">Browse-to-Buy</div>
+    <div class="proto-desc">4 psychological concepts that convert high-intent browsers who haven't purchased — targeting habitual window shoppers and cart abandoners.</div>
+    <div class="proto-variants">
+      <span class="proto-variant">Deal Decay</span>
+      <span class="proto-variant">Phantom Cart</span>
+      <span class="proto-variant">Graveyard</span>
+      <span class="proto-variant">Heartbeat</span>
+    </div>
+    <div class="proto-cta"><span>Open prototype</span><span>→</span></div>
+  </a>
+
+</div>
+
+<div class="footer">Groupon MBNXT · Personalization Research · 2026</div>
+
+</body>
+</html>
