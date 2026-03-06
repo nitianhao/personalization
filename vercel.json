@@ -1,5 +1,5 @@
 {
   "routes": [
-    { "src": "/", "dest": "/make-it-yours.html" }
+    { "src": "/", "dest": "/index.html" }
   ]
 }
