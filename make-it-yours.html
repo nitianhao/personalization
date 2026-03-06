@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Make It Yours — Groupon</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --green: #00A046;
+  --green-light: #E6F7EE;
+  --navy: #1a1f35;
+  --gray-100: #f5f5f5;
+  --gray-200: #e8e8e8;
+  --gray-500: #888;
+  --gray-700: #444;
+  --text: #1a1a1a;
+  --radius-pill: 100px;
+  --radius-card: 12px;
+  --sheet-radius: 20px;
+}
+
+html, body {
+  min-height: 100%;
+  background: radial-gradient(ellipse at 50% 30%, #2e2e3a 0%, #1a1a1a 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ─── Device frame ─── */
+.device-frame {
+  position: relative;
+  background: #141414;
+  border-radius: 56px;
+  padding: 14px 10px 22px;
+  box-shadow:
+    0 0 0 1px #3a3a3a,
+    0 0 0 3px #0d0d0d,
+    0 48px 120px rgba(0,0,0,.85),
+    inset 0 1px 0 rgba(255,255,255,.07);
+}
+/* Side buttons */
+.device-btn {
+  position: absolute;
+  background: #1e1e1e;
+  border-radius: 2px 0 0 2px;
+  box-shadow: -1px 0 0 #444, inset 0 1px 0 rgba(255,255,255,.06);
+}
+.device-btn-vol-up  { left:-3px; top:108px; width:3px; height:30px; }
+.device-btn-vol-dn  { left:-3px; top:154px; width:3px; height:30px; }
+.device-btn-sil     { left:-3px; top: 70px; width:3px; height:22px; }
+.device-btn-power   { right:-3px; top:128px; width:3px; height:54px; border-radius: 0 2px 2px 0; box-shadow: 1px 0 0 #444, inset 0 1px 0 rgba(255,255,255,.06); }
+/* Home indicator (below phone, inside frame padding) */
+.device-home {
+  height: 5px;
+  width: 104px;
+  background: rgba(255,255,255,.28);
+  border-radius: 3px;
+  margin: 10px auto 0;
+}
+
+/* ─── Phone shell ─── */
+.phone {
+  width: 375px;
+  height: 812px;
+  background: #fff;
+  border-radius: 40px;
+  overflow: hidden;
+  position: relative;
+}
+/* Dynamic Island notch */
+.device-notch {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 34px;
+  background: #141414;
+  border-radius: 20px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.device-notch::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  border: 1.5px solid #2a2a2a;
+}
+.device-notch::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0d3a40;
+  box-shadow: 0 0 4px rgba(0,200,230,.6);
+}
+
+/* ─── Status bar ─── */
+.status-bar {
+  background: var(--navy);
+  padding: 14px 24px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+.status-bar .icons { display: flex; gap: 6px; align-items: center; }
+
+/* ─── Header ─── */
+.app-header {
+  background: var(--navy);
+  padding: 0 16px 16px;
+  color: #fff;
+}
+.location-row {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 18px; font-weight: 700; margin-bottom: 12px; cursor: pointer;
+}
+.search-bar {
+  background: #fff; border-radius: 50px; padding: 10px 16px;
+  display: flex; align-items: center; gap: 8px; color: #999; font-size: 15px;
+}
+
+/* ─── Feed ─── */
+.feed {
+  height: calc(812px - 100px - 64px);
+  overflow-y: auto; overflow-x: hidden;
+  padding: 16px; background: #fafafa;
+  scrollbar-width: none;
+  transition: filter 0.3s ease;
+}
+.feed::-webkit-scrollbar { display: none; }
+.feed.blurred { filter: blur(3px); pointer-events: none; }
+
+.feed-section-title {
+  font-size: 20px; font-weight: 800; color: var(--text);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+}
+.deal-cards-row {
+  display: flex; gap: 10px; margin-bottom: 20px;
+  overflow-x: auto; scrollbar-width: none; padding-bottom: 2px;
+}
+.deal-cards-row::-webkit-scrollbar { display: none; }
+.deal-card {
+  flex-shrink: 0; width: 160px; border-radius: 14px; overflow: hidden;
+  background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.08); cursor: pointer; position: relative;
+}
+.deal-card .img-wrap { height: 110px; position: relative; overflow: hidden; }
+.deal-card .img-wrap.spa { background: linear-gradient(135deg, #f093fb, #f5576c); }
+.deal-card .img-wrap.bowl { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+.deal-card .img-wrap.food { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+.deal-card .badge-overlay {
+  position: absolute; top: 8px; left: 8px;
+  background: rgba(0,0,0,.55); border-radius: 20px; padding: 3px 8px;
+  font-size: 11px; font-weight: 700; color: #fff;
+}
+.deal-card .img-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 6px 8px; font-size: 11px; font-weight: 700; color: #fff;
+  background: linear-gradient(transparent, rgba(0,0,0,.5));
+}
+.deal-card .card-body { padding: 8px 10px 10px; }
+.deal-card .card-price { font-size: 16px; font-weight: 800; color: var(--green); }
+.deal-card .card-title { font-size: 12px; color: var(--gray-700); margin-top: 2px; line-height: 1.3; }
+.deal-card .heart-btn {
+  position: absolute; top: 8px; right: 8px; width: 28px; height: 28px;
+  background: rgba(255,255,255,.85); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.featured-card {
+  border-radius: 14px; overflow: hidden; background: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08); margin-bottom: 16px; cursor: pointer;
+}
+.featured-card .img-wrap { height: 180px; position: relative; }
+.featured-card .img-wrap.bowling { background: linear-gradient(135deg, #1a1a2e, #16213e); }
+.featured-card .popular-tag {
+  position: absolute; top: 12px; left: 12px;
+  background: #9b59b6; color: #fff; font-size: 11px; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px; display: flex; align-items: center; gap: 4px;
+}
+.featured-card .trending-tag {
+  position: absolute; bottom: 12px; left: 12px;
+  background: rgba(255,255,255,.9); color: var(--text); font-size: 11px; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px; display: flex; align-items: center; gap: 4px;
+}
+.featured-card .heart-btn {
+  position: absolute; top: 12px; right: 12px; width: 32px; height: 32px;
+  background: rgba(255,255,255,.85); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.featured-card .card-body { padding: 12px 14px 14px; }
+.featured-card .card-title { font-size: 15px; font-weight: 800; color: var(--text); line-height: 1.3; }
+.bowling-art {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 100%;
+  display: flex; align-items: flex-end; padding: 0 12px 12px; gap: 6px;
+}
+.bowling-ball {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+.lucky-x {
+  position: absolute; top: 50%; right: 20px; transform: translateY(-50%);
+  font-size: 42px; font-weight: 900; color: #e74c3c; opacity: 0.9; font-style: italic;
+}
+
+/* ─── Bottom nav ─── */
+.bottom-nav {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 64px;
+  background: #fff; border-top: 1px solid var(--gray-200);
+  display: flex; align-items: center; justify-content: space-around;
+  padding-bottom: 8px; z-index: 10;
+}
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  cursor: pointer; position: relative; padding: 4px 16px;
+}
+.nav-item svg { width: 22px; height: 22px; }
+.nav-item span { font-size: 10px; font-weight: 500; color: var(--gray-500); }
+.nav-item.active span { color: var(--green); font-weight: 700; }
+.nav-badge {
+  position: absolute; top: 0; right: 8px; width: 16px; height: 16px;
+  background: var(--green); border-radius: 50%; font-size: 9px; font-weight: 800;
+  color: #fff; display: flex; align-items: center; justify-content: center;
+}
+
+/* ─── Overlay ─── */
+.overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,0);
+  z-index: 20; pointer-events: none; transition: background 0.35s ease;
+}
+.overlay.active { background: rgba(0,0,0,.35); pointer-events: all; }
+
+/* ─── Bottom sheet base ─── */
+.bottom-sheet {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: #fff; border-radius: var(--sheet-radius) var(--sheet-radius) 0 0;
+  z-index: 30; transform: translateY(100%);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex; flex-direction: column;
+}
+.bottom-sheet.open { transform: translateY(0); }
+
+.sheet-handle {
+  width: 36px; height: 4px; background: var(--gray-200);
+  border-radius: 4px; margin: 12px auto 4px; flex-shrink: 0;
+}
+.sheet-header {
+  padding: 8px 20px 0; position: relative; flex-shrink: 0;
+}
+.step-label {
+  font-size: 11px; font-weight: 600; color: var(--gray-500);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+}
+.sheet-title { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1.2; }
+.sheet-sub { font-size: 13px; color: var(--gray-500); margin-top: 4px; line-height: 1.4; }
+.close-btn {
+  position: absolute; top: 8px; right: 16px; width: 28px; height: 28px;
+  border-radius: 50%; background: var(--gray-100); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: var(--gray-700);
+}
+
+/* ─── Steps container ─── */
+.steps-wrap {
+  flex: 1; overflow: hidden; position: relative; margin-top: 16px;
+}
+.step {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  overflow-y: auto; padding: 0 20px; scrollbar-width: none;
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease;
+}
+.step::-webkit-scrollbar { display: none; }
+.step.hidden-left  { transform: translateX(-100%); opacity: 0; pointer-events: none; }
+.step.hidden-right { transform: translateX(100%);  opacity: 0; pointer-events: none; }
+.step.visible      { transform: translateX(0);     opacity: 1; }
+
+/* ─── Pills (Variant A) ─── */
+.pill-group { margin-bottom: 14px; }
+.pill-group-label {
+  font-size: 12px; font-weight: 700; color: var(--gray-700);
+  margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.3px;
+}
+.pills-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  padding: 7px 14px; border-radius: var(--radius-pill);
+  border: 1.5px solid var(--gray-200); background: #fff;
+  font-size: 13px; font-weight: 500; color: var(--gray-700);
+  cursor: pointer; transition: all 0.18s ease; user-select: none;
+}
+.pill:active { transform: scale(0.95); }
+.pill.selected { background: var(--green-light); border-color: var(--green); color: var(--green); font-weight: 700; }
+
+/* ─── Who-for cards (Variant A) ─── */
+.who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-bottom: 8px; }
+.who-card {
+  border: 1.5px solid var(--gray-200); border-radius: var(--radius-card);
+  padding: 14px 12px; display: flex; align-items: center; gap: 10px;
+  cursor: pointer; background: #fff; transition: all 0.18s ease; user-select: none;
+}
+.who-card:active { transform: scale(0.96); }
+.who-card.selected { background: var(--green-light); border-color: var(--green); }
+.who-card .emoji { font-size: 22px; line-height: 1; }
+.who-card .label { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; }
+.who-card.selected .label { color: var(--green); }
+.who-card .check {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 1.5px solid var(--gray-200); flex-shrink: 0;
+  transition: all 0.15s ease; display: flex; align-items: center; justify-content: center;
+}
+.who-card.selected .check { background: var(--green); border-color: var(--green); }
+.who-card.selected .check::after { content: '✓'; font-size: 10px; color: #fff; font-weight: 800; }
+
+/* ─── Sheet footer ─── */
+.sheet-footer {
+  padding: 12px 20px 20px; flex-shrink: 0;
+  display: flex; flex-direction: column; gap: 8px;
+  border-top: 1px solid var(--gray-100); background: #fff;
+}
+.btn-primary {
+  width: 100%; padding: 14px; border-radius: var(--radius-pill);
+  background: var(--green); color: #fff; font-size: 15px; font-weight: 800;
+  border: none; cursor: pointer; transition: background 0.15s, transform 0.1s;
+}
+.btn-primary:active { background: #008038; transform: scale(0.98); }
+.btn-skip {
+  text-align: center; font-size: 13px; font-weight: 600;
+  color: var(--gray-500); cursor: pointer; padding: 4px;
+}
+
+/* ─── Toast ─── */
+.toast {
+  position: absolute; bottom: 80px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--text); color: #fff; font-size: 13px; font-weight: 600;
+  padding: 10px 18px; border-radius: 50px; white-space: nowrap;
+  opacity: 0; pointer-events: none; z-index: 50;
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ─── Variant picker sheet ─── */
+#variantPicker {
+  height: 680px;
+  z-index: 40;
+}
+.variant-list { padding: 4px 20px 0; overflow-y: auto; flex: 1; }
+.variant-option {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 10px 0; border-bottom: 1px solid var(--gray-100);
+  cursor: pointer; transition: background 0.15s;
+}
+.variant-option:last-child { border-bottom: none; }
+.variant-option:active { background: var(--gray-100); }
+.variant-radio {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--gray-200); flex-shrink: 0; margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.variant-radio.selected { border-color: var(--green); background: var(--green); }
+.variant-radio.selected::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #fff; }
+.variant-info { flex: 1; }
+.variant-name { font-size: 15px; font-weight: 700; color: var(--text); }
+.variant-desc { font-size: 12px; color: var(--gray-500); margin-top: 2px; line-height: 1.4; }
+.variant-tag {
+  font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px;
+  margin-left: 6px; vertical-align: middle;
+}
+.tag-control { background: #e8f4fd; color: #2980b9; }
+.tag-test { background: #fef9e7; color: #d68910; }
+
+/* ─── Variant B — Quiz Mode ─── */
+#sheetB { height: 430px; }
+.progress-bar-wrap {
+  padding: 12px 20px 0; flex-shrink: 0;
+}
+.progress-bar-track {
+  height: 3px; background: var(--gray-200); border-radius: 3px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; background: var(--green); border-radius: 3px;
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+.quiz-question {
+  font-size: 22px; font-weight: 800; color: var(--text);
+  line-height: 1.25; margin-bottom: 6px;
+}
+.quiz-sub { font-size: 13px; color: var(--gray-500); margin-bottom: 20px; }
+
+.quiz-big-btn {
+  width: 100%; padding: 16px 20px; border-radius: 14px;
+  border: 2px solid var(--gray-200); background: #fff;
+  font-size: 16px; font-weight: 600; color: var(--text);
+  cursor: pointer; display: flex; align-items: center; gap: 14px;
+  margin-bottom: 10px; text-align: left;
+  transition: all 0.18s ease;
+}
+.quiz-big-btn:active { transform: scale(0.98); }
+.quiz-big-btn.selected { border-color: var(--green); background: var(--green-light); color: var(--green); }
+.quiz-big-btn .btn-emoji { font-size: 24px; flex-shrink: 0; }
+.quiz-big-btn .btn-text { flex: 1; }
+.quiz-big-btn .btn-label { font-size: 15px; font-weight: 700; }
+.quiz-big-btn .btn-sublabel { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+.quiz-big-btn.selected .btn-sublabel { color: var(--green); opacity: 0.8; }
+.quiz-big-btn .btn-check {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid var(--gray-200); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.quiz-big-btn.selected .btn-check { background: var(--green); border-color: var(--green); }
+.quiz-big-btn.selected .btn-check::after { content: '✓'; font-size: 11px; color: #fff; font-weight: 800; }
+
+/* ─── Variant C — All in One ─── */
+#sheetC { height: 500px; }
+.aio-section { margin-bottom: 20px; }
+.aio-section-title {
+  font-size: 13px; font-weight: 800; color: var(--gray-700);
+  text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px;
+}
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid var(--gray-100);
+}
+.toggle-row:last-child { border-bottom: none; }
+.toggle-label { font-size: 15px; color: var(--text); font-weight: 500; }
+.toggle-switch {
+  width: 44px; height: 26px; border-radius: 13px; background: var(--gray-200);
+  position: relative; cursor: pointer; flex-shrink: 0;
+  transition: background 0.2s;
+}
+.toggle-switch.on { background: var(--green); }
+.toggle-switch::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+.toggle-switch.on::after { transform: translateX(18px); }
+
+.aio-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.aio-chip {
+  padding: 6px 12px; border-radius: var(--radius-pill);
+  border: 1.5px solid var(--gray-200); background: #fff;
+  font-size: 12px; font-weight: 500; color: var(--gray-700);
+  cursor: pointer; transition: all 0.15s;
+}
+.aio-chip.selected { background: var(--green-light); border-color: var(--green); color: var(--green); font-weight: 700; }
+
+/* ─── Variant D — Vibe Check ─── */
+#sheetD { height: 420px; }
+.vibe-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px; padding-bottom: 8px;
+}
+.vibe-tile {
+  aspect-ratio: 1; border-radius: 16px;
+  border: 2px solid var(--gray-200); background: #fff;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; cursor: pointer; transition: all 0.18s ease; user-select: none;
+  position: relative;
+}
+.vibe-tile:active { transform: scale(0.93); }
+.vibe-tile.selected { border-color: var(--green); background: var(--green-light); }
+.vibe-tile.disabled { opacity: 0.35; pointer-events: none; }
+.vibe-tile .vibe-emoji { font-size: 28px; }
+.vibe-tile .vibe-label { font-size: 11px; font-weight: 700; color: var(--gray-700); text-align: center; line-height: 1.2; }
+.vibe-tile.selected .vibe-label { color: var(--green); }
+.vibe-tile .vibe-check {
+  position: absolute; top: 6px; right: 6px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--green); display: none;
+  align-items: center; justify-content: center;
+}
+.vibe-tile.selected .vibe-check { display: flex; }
+.vibe-tile .vibe-check::after { content: '✓'; font-size: 9px; color: #fff; font-weight: 900; }
+.vibe-counter {
+  font-size: 12px; font-weight: 600; color: var(--gray-500);
+  text-align: center; margin-bottom: 12px;
+}
+.vibe-counter span { color: var(--green); font-weight: 800; }
+
+/* ─── Category page ─── */
+.cat-page {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  z-index: 50;
+  transform: translateX(100%);
+  transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.cat-page.open { transform: translateX(0); }
+
+.cat-header {
+  background: #fff;
+  border-bottom: 1px solid var(--gray-200);
+  padding: 14px 14px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.cat-back {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 18px; color: var(--text); flex-shrink: 0;
+}
+.cat-search {
+  flex: 1; display: flex; align-items: center; gap: 8px;
+  background: var(--gray-100); border-radius: 50px;
+  padding: 8px 14px; font-size: 14px; color: var(--gray-700);
+}
+.cat-search-loc {
+  font-size: 12px; font-weight: 600; color: var(--green);
+  white-space: nowrap; flex-shrink: 0;
+}
+
+.cat-section-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--gray-100);
+  flex-shrink: 0;
+  background: #fff;
+}
+.cat-section-title-text {
+  font-size: 15px; font-weight: 700; color: var(--text);
+  display: flex; align-items: center; gap: 4px;
+}
+.cat-section-icons { display: flex; gap: 8px; }
+.cat-icon-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid var(--gray-200); background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.cat-icon-btn svg { width: 16px; height: 16px; }
+
+.cat-feed {
+  flex: 1; overflow-y: auto; padding: 12px 14px 80px;
+  scrollbar-width: none; background: #fafafa;
+}
+.cat-feed::-webkit-scrollbar { display: none; }
+
+/* Full-width deal card for category page */
+.cat-deal-card {
+  background: #fff; border-radius: 14px;
+  overflow: hidden; margin-bottom: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.07);
+  cursor: pointer;
+}
+.cat-deal-img {
+  width: 100%; height: 160px; position: relative; overflow: hidden;
+}
+.cat-deal-img img { width: 100%; height: 100%; object-fit: cover; }
+.cat-deal-img-placeholder { width: 100%; height: 100%; }
+.cat-badge {
+  position: absolute; padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; gap: 4px;
+}
+.cat-badge.book { top: 10px; left: 10px; background: rgba(255,255,255,.92); color: var(--text); }
+.cat-badge.popular { top: 10px; left: 10px; background: #9b59b6; color: #fff; }
+.cat-badge.trending { bottom: 10px; left: 10px; background: rgba(255,255,255,.92); color: var(--text); }
+.cat-deal-heart {
+  position: absolute; top: 10px; right: 10px;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(255,255,255,.85); display: flex;
+  align-items: center; justify-content: center; font-size: 15px;
+}
+.cat-carousel-dots {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 5px;
+}
+.cat-carousel-dots span {
+  width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.5);
+}
+.cat-carousel-dots span.active { background: #fff; }
+
+.cat-deal-body { padding: 10px 12px 12px; }
+.cat-deal-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 6px; }
+.cat-deal-locs { font-size: 11px; color: var(--gray-500); margin-bottom: 6px; }
+.cat-deal-price-row { display: flex; flex-direction: column; gap: 2px; }
+.cat-price-option {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 0; border-top: 1px solid var(--gray-100);
+  font-size: 13px; color: var(--gray-700);
+}
+.cat-price-option:first-child { border-top: none; }
+.cat-price-option .price { font-size: 16px; font-weight: 800; color: var(--green); }
+
+/* ─── Inline preference card ─── */
+.inline-pref-wrap {
+  overflow: hidden;
+  max-height: 220px;
+  opacity: 1;
+  margin-bottom: 14px;
+  transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1),
+              opacity 0.3s ease,
+              margin-bottom 0.4s ease;
+}
+.inline-pref-wrap.vanished { max-height: 0; opacity: 0; margin-bottom: 0; }
+
+.inline-pref-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1.5px solid var(--green);
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,160,70,.1);
+}
+.inline-pref-top {
+  background: var(--green-light);
+  padding: 8px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.inline-pref-label {
+  font-size: 11px; font-weight: 800; color: var(--green);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  display: flex; align-items: center; gap: 5px;
+}
+.inline-pref-close {
+  width: 20px; height: 20px; border-radius: 50%; background: rgba(0,160,70,.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--green); cursor: pointer; font-weight: 700;
+}
+.inline-pref-body { padding: 12px 12px 14px; }
+.inline-pref-q { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+.inline-pref-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+.inline-pref-pill {
+  padding: 6px 12px; border-radius: var(--radius-pill);
+  border: 1.5px solid var(--gray-200); background: #fff;
+  font-size: 13px; font-weight: 500; color: var(--gray-700);
+  cursor: pointer; transition: all 0.15s; user-select: none;
+}
+.inline-pref-pill:active { transform: scale(0.95); }
+.inline-pref-pill.selected { background: var(--green-light); border-color: var(--green); color: var(--green); font-weight: 700; }
+.inline-pref-thanks {
+  font-size: 14px; font-weight: 700; color: var(--green);
+  display: flex; align-items: center; gap: 6px; padding: 4px 0;
+}
+
+/* ─── Inline variant F — Single Tap grid ─── */
+.single-tap-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.single-tap-tile {
+  border: 1.5px solid var(--gray-200); border-radius: 12px;
+  padding: 12px 10px; display: flex; flex-direction: column;
+  align-items: center; gap: 6px; cursor: pointer;
+  transition: all 0.15s; user-select: none; background: #fff;
+}
+.single-tap-tile:active { transform: scale(0.95); }
+.single-tap-tile.selected { border-color: var(--green); background: var(--green-light); }
+.single-tap-tile.selected .st-label { color: var(--green); }
+.single-tap-tile .st-emoji { font-size: 26px; }
+.single-tap-tile .st-label { font-size: 12px; font-weight: 700; color: var(--gray-700); text-align: center; }
+
+/* ─── Inline variant G — Emoji slider ─── */
+.emoji-slider-wrap { padding: 4px 0 8px; }
+.emoji-endpoints {
+  display: flex; justify-content: space-between; margin-bottom: 6px;
+}
+.emoji-endpoints span { font-size: 22px; }
+.slider-track {
+  position: relative; height: 6px; background: var(--gray-200);
+  border-radius: 6px; cursor: pointer; margin: 0 4px;
+}
+.slider-fill {
+  height: 100%; background: var(--green); border-radius: 6px;
+  width: 50%; transition: width 0.1s;
+}
+.slider-thumb {
+  position: absolute; top: 50%; transform: translate(-50%, -50%);
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--green);
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+  cursor: grab; left: 50%;
+}
+.slider-labels {
+  display: flex; justify-content: space-between;
+  font-size: 10px; color: var(--gray-500); margin-top: 6px; font-weight: 600;
+}
+.slider-confirm-btn {
+  width: 100%; margin-top: 12px; padding: 10px;
+  border-radius: var(--radius-pill); background: var(--green);
+  color: #fff; font-size: 13px; font-weight: 700; border: none; cursor: pointer;
+}
+
+/* ─── Inline variant H — Social proof personas ─── */
+.persona-list { display: flex; flex-direction: column; gap: 8px; }
+.persona-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px;
+  border: 1.5px solid var(--gray-200); background: #fff;
+  cursor: pointer; transition: all 0.15s; user-select: none;
+}
+.persona-card:active { transform: scale(0.98); }
+.persona-card.selected { border-color: var(--green); background: var(--green-light); }
+.persona-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.persona-text { flex: 1; }
+.persona-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.persona-desc { font-size: 11px; color: var(--gray-500); margin-top: 1px; }
+.persona-card.selected .persona-name { color: var(--green); }
+
+/* ─── Inline variant I — Mini 2-step ─── */
+.mini-step-dots {
+  display: flex; justify-content: center; gap: 5px; margin-bottom: 10px;
+}
+.mini-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--gray-200);
+  transition: background 0.2s;
+}
+.mini-dot.active { background: var(--green); width: 14px; border-radius: 3px; }
+.mini-step { display: none; }
+.mini-step.active { display: block; }
+.mini-options { display: flex; flex-direction: column; gap: 6px; }
+.mini-option {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: 10px;
+  border: 1.5px solid var(--gray-200); background: #fff;
+  cursor: pointer; transition: all 0.15s; font-size: 13px; font-weight: 600;
+  color: var(--text); user-select: none;
+}
+.mini-option:active { transform: scale(0.98); }
+.mini-option.selected { border-color: var(--green); background: var(--green-light); color: var(--green); }
+.mini-option .mo-emoji { font-size: 16px; }
+
+/* ─── Picker section label ─── */
+.picker-section-label {
+  font-size: 10px; font-weight: 800; color: var(--gray-500);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  padding: 10px 0 4px; border-bottom: 1px solid var(--gray-100);
+  margin-bottom: 2px;
+}
+</style>
+</head>
+<body>
+<div class="device-frame">
+  <div class="device-btn device-btn-sil"></div>
+  <div class="device-btn device-btn-vol-up"></div>
+  <div class="device-btn device-btn-vol-dn"></div>
+  <div class="device-btn device-btn-power"></div>
+<div class="phone" id="phone">
+  <div class="device-notch"></div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span>9:46</span>
+    <div class="icons" style="display:flex;gap:6px;align-items:center;">
+      <span style="font-size:12px;">●●●●</span>
+      <span style="font-size:12px;">WiFi</span>
+      <span style="font-size:12px;">🔋</span>
+    </div>
+  </div>
+
+  <!-- App header -->
+  <div class="app-header">
+    <div class="location-row">New York, NY <span style="font-size:12px;">▾</span></div>
+    <div class="search-bar">
+      <span style="color:#bbb;font-size:16px;">⌕</span> Search Spa
+    </div>
+  </div>
+
+  <!-- Feed -->
+  <div class="feed" id="feed">
+    <div class="feed-section-title">Trending in New York, NY ▾</div>
+    <div class="deal-cards-row">
+      <div class="deal-card">
+        <div class="img-wrap spa">
+          <div class="badge-overlay">5⭐ 10k+ 💛</div>
+          <div class="img-label">The Season's Best</div>
+        </div>
+        <div class="heart-btn">🤍</div>
+        <div class="card-body">
+          <div class="card-price">$49</div>
+          <div class="card-title">Premium Facial + Massage Package</div>
+        </div>
+      </div>
+      <div class="deal-card">
+        <div class="img-wrap bowl">
+          <div class="img-label">Celebrate Women</div>
+        </div>
+        <div class="heart-btn">🤍</div>
+        <div class="card-body">
+          <div class="card-price">$35</div>
+          <div class="card-title">Spa Day for Two — Robes Included</div>
+        </div>
+      </div>
+      <div class="deal-card">
+        <div class="img-wrap food">
+          <div class="badge-overlay">🔥 Hot</div>
+          <div class="img-label">Date Night Special</div>
+        </div>
+        <div class="heart-btn">🤍</div>
+        <div class="card-body">
+          <div class="card-price">$89</div>
+          <div class="card-title">Rooftop Dinner for 2 + Wine</div>
+        </div>
+      </div>
+    </div>
+    <div class="featured-card">
+      <div class="img-wrap bowling" style="height:180px;">
+        <div class="bowling-art">
+          <div class="bowling-ball" style="background:#2ecc71;">🎳</div>
+          <div class="bowling-ball" style="background:#e74c3c;">🎳</div>
+          <div class="bowling-ball" style="background:#f39c12;">🎳</div>
+          <div class="bowling-ball" style="background:#9b59b6;">🎳</div>
+        </div>
+        <div class="lucky-x">✕</div>
+        <div class="popular-tag">🎁 Popular Gift</div>
+        <div class="trending-tag">📈 Trending</div>
+        <div class="heart-btn">🤍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Lucky Strike: Up to 72% Off Bowling + Included Shoe Rental</div>
+        <div style="color:var(--green);font-weight:700;margin-top:6px;font-size:14px;">From $18</div>
+      </div>
+    </div>
+    <div class="feed-section-title" style="margin-top:4px;">Popular Near You</div>
+    <div class="deal-cards-row">
+      <div class="deal-card">
+        <div class="img-wrap" style="background:linear-gradient(135deg,#fd746c,#ff9068);">
+          <div class="badge-overlay">⚡ Flash</div>
+          <div class="img-label">Escape Room</div>
+        </div>
+        <div class="heart-btn">🤍</div>
+        <div class="card-body">
+          <div class="card-price">$22</div>
+          <div class="card-title">60-min Escape Room for 2–6 People</div>
+        </div>
+      </div>
+      <div class="deal-card">
+        <div class="img-wrap" style="background:linear-gradient(135deg,#a18cd1,#fbc2eb);">
+          <div class="img-label">Yoga Studio</div>
+        </div>
+        <div class="heart-btn">🤍</div>
+        <div class="card-body">
+          <div class="card-price">$29</div>
+          <div class="card-title">10-Class Yoga Pass — Any Location</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <div class="nav-item active" id="navExplore">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#00A046" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>Explore</span>
+    </div>
+    <div class="nav-item" id="navCategories" onclick="openCategoryPage()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Categories</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span>Cart</span>
+      <div class="nav-badge">1</div>
+    </div>
+    <div class="nav-item" id="navNotifications" onclick="openVariantPicker()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span>Notifications</span>
+      <div class="nav-badge" style="background:#e74c3c;">🚩</div>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Profile</span>
+    </div>
+  </div>
+
+  <!-- Shared overlay -->
+  <div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+  <!-- ════════════════════════════════════════
+       VARIANT PICKER
+  ════════════════════════════════════════ -->
+  <div class="bottom-sheet" id="variantPicker">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title" style="font-size:17px;">🚩 Feature Flags</div>
+      <div class="sheet-sub">Pick a variant to preview</div>
+      <button class="close-btn" onclick="closeAll()">✕</button>
+    </div>
+    <div class="variant-list" style="margin-top:8px;">
+      <div class="picker-section-label">Bottom Sheet</div>
+      <div class="variant-option" onclick="selectVariant('A')">
+        <div class="variant-radio selected" id="radioA"></div>
+        <div class="variant-info">
+          <div class="variant-name">A — Pill Flow <span class="variant-tag tag-control">CONTROL</span></div>
+          <div class="variant-desc">2-step flow. Pill multi-select → who-for card grid.</div>
+        </div>
+      </div>
+      <div class="variant-option" onclick="selectVariant('B')">
+        <div class="variant-radio" id="radioB"></div>
+        <div class="variant-info">
+          <div class="variant-name">B — Quiz Mode <span class="variant-tag tag-test">TEST</span></div>
+          <div class="variant-desc">One question at a time. Progress bar. 4 guided steps.</div>
+        </div>
+      </div>
+      <div class="variant-option" onclick="selectVariant('C')">
+        <div class="variant-radio" id="radioC"></div>
+        <div class="variant-info">
+          <div class="variant-name">C — All in One <span class="variant-tag tag-test">TEST</span></div>
+          <div class="variant-desc">Single scroll. Toggle switches + chips. Lowest friction.</div>
+        </div>
+      </div>
+      <div class="variant-option" onclick="selectVariant('D')">
+        <div class="variant-radio" id="radioD"></div>
+        <div class="variant-info">
+          <div class="variant-name">D — Vibe Check <span class="variant-tag tag-test">TEST</span></div>
+          <div class="variant-desc">Pick 3 lifestyle vibes from an emoji 3×3 grid.</div>
+        </div>
+      </div>
+      <div class="picker-section-label">Inline Card (Category Feed)</div>
+      <div class="variant-option" onclick="selectVariant('E')">
+        <div class="variant-radio" id="radioE"></div>
+        <div class="variant-info">
+          <div class="variant-name">E — Pill Row <span class="variant-tag tag-control">CONTROL</span></div>
+          <div class="variant-desc">Question + multi-select pill row. Current inline design.</div>
+        </div>
+      </div>
+      <div class="variant-option" onclick="selectVariant('F')">
+        <div class="variant-radio" id="radioF"></div>
+        <div class="variant-info">
+          <div class="variant-name">F — Single Tap <span class="variant-tag tag-test">TEST</span></div>
+          <div class="variant-desc">2×2 icon tiles. One tap → instant vanish. Zero friction.</div>
+        </div>
+      </div>
+      <div class="variant-option" onclick="selectVariant('G')">
+        <div class="variant-radio" id="radioG"></div>
+        <div class="variant-info">
+          <div class="variant-name">G — Flavor Slider <span class="variant-tag tag-test">TEST</span></div>
+          <div class="variant-desc">Drag a slider from 🥗 to 🔥. One gesture, done.</div>
+        </div>
+      </div>
+      <div class="variant-option" onclick="selectVariant('H')">
+        <div class="variant-radio" id="radioH"></div>
+        <div class="variant-info">
+          <div class="variant-name">H — Social Proof <span class="variant-tag tag-test">TEST</span></div>
+          <div class="variant-desc">Pick a persona ("Sarah, 34 — date nights"). Feels personal.</div>
+        </div>
+      </div>
+      <div class="variant-option" onclick="selectVariant('I')">
+        <div class="variant-radio" id="radioI"></div>
+        <div class="variant-info">
+          <div class="variant-name">I — Mini 2-Step <span class="variant-tag tag-test">TEST</span></div>
+          <div class="variant-desc">2 quick questions inside the card. Progress dots. Stays inline.</div>
+        </div>
+      </div>
+    </div>
+    <div class="sheet-footer">
+      <button class="btn-primary" onclick="launchSelectedVariant()">Preview This Variant</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       VARIANT A — PILL FLOW (control)
+  ════════════════════════════════════════ -->
+  <div class="bottom-sheet" id="sheetA" style="height:390px;">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="step-label" id="aStepLabel">1 of 2</div>
+      <div class="sheet-title" id="aTitle">Help us get to know you</div>
+      <div class="sheet-sub" id="aSub">Quick question so we stop showing you stuff you don't care about.</div>
+      <button class="close-btn" onclick="closeVariant('A')">✕</button>
+    </div>
+    <div class="steps-wrap">
+      <!-- Step 1 -->
+      <div class="step visible" id="aStep1">
+        <div class="pill-group">
+          <div class="pill-group-label">I have…</div>
+          <div class="pills-row">
+            <div class="pill" data-group="have" data-val="kids-little" onclick="togglePill(this)">Kids (little ones)</div>
+            <div class="pill" data-group="have" data-val="kids-teens" onclick="togglePill(this)">Kids (teens)</div>
+            <div class="pill" data-group="have" data-val="partner" onclick="togglePill(this)">A partner</div>
+            <div class="pill" data-group="have" data-val="pets" onclick="togglePill(this)">Pets</div>
+            <div class="pill" data-group="have" data-val="none" onclick="togglePillNone(this)">None of these</div>
+          </div>
+        </div>
+        <div class="pill-group">
+          <div class="pill-group-label">My weekdays are usually…</div>
+          <div class="pills-row">
+            <div class="pill" data-group="week" onclick="togglePill(this)">At the office</div>
+            <div class="pill" data-group="week" onclick="togglePill(this)">Working from home</div>
+            <div class="pill" data-group="week" onclick="togglePill(this)">On the move</div>
+            <div class="pill" data-group="week" onclick="togglePill(this)">Flexible</div>
+          </div>
+        </div>
+      </div>
+      <!-- Step 2 -->
+      <div class="step hidden-right" id="aStep2">
+        <div class="who-grid">
+          <div class="who-card" onclick="toggleCard(this)">
+            <span class="emoji">🙋</span><span class="label">Myself</span><div class="check"></div>
+          </div>
+          <div class="who-card" onclick="toggleCard(this)">
+            <span class="emoji">🎁</span><span class="label">Gift for someone</span><div class="check"></div>
+          </div>
+          <div class="who-card" onclick="toggleCard(this)">
+            <span class="emoji">👫</span><span class="label">Me + my partner</span><div class="check"></div>
+          </div>
+          <div class="who-card" onclick="toggleCard(this)">
+            <span class="emoji">👨‍👩‍👧</span><span class="label">Family activity</span><div class="check"></div>
+          </div>
+          <div class="who-card" onclick="toggleCard(this)">
+            <span class="emoji">👯</span><span class="label">With friends</span><div class="check"></div>
+          </div>
+          <div class="who-card" onclick="toggleCard(this)">
+            <span class="emoji">💼</span><span class="label">Team / coworkers</span><div class="check"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sheet-footer">
+      <button class="btn-primary" id="aCtaBtn" onclick="handleACta()">Next</button>
+      <div class="btn-skip" onclick="handleASkip()">Skip</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       VARIANT B — QUIZ MODE
+  ════════════════════════════════════════ -->
+  <div class="bottom-sheet" id="sheetB">
+    <div class="sheet-handle"></div>
+    <div class="progress-bar-wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-size:11px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px;" id="bStepLabel">Step 1 of 4</span>
+        <button class="close-btn" style="position:static;width:24px;height:24px;font-size:12px;" onclick="closeVariant('B')">✕</button>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="bProgress" style="width:25%;"></div>
+      </div>
+    </div>
+    <div class="steps-wrap" style="margin-top:20px;">
+      <!-- B Step 1 -->
+      <div class="step visible" id="bStep1" style="padding:0 20px;">
+        <div class="quiz-question">Do you have kids?</div>
+        <div class="quiz-sub">We'll tune family-friendly deals for you.</div>
+        <div class="quiz-big-btn" onclick="quizSelect(this, 'b-kids', true)">
+          <span class="btn-emoji">👧</span>
+          <div class="btn-text">
+            <div class="btn-label">Yes, I do</div>
+            <div class="btn-sublabel">Little ones, teens, or both</div>
+          </div>
+          <div class="btn-check"></div>
+        </div>
+        <div class="quiz-big-btn" onclick="quizSelect(this, 'b-kids', false)">
+          <span class="btn-emoji">🙅</span>
+          <div class="btn-text">
+            <div class="btn-label">Nope, just me</div>
+            <div class="btn-sublabel">No kids in the picture</div>
+          </div>
+          <div class="btn-check"></div>
+        </div>
+      </div>
+      <!-- B Step 2 -->
+      <div class="step hidden-right" id="bStep2" style="padding:0 20px;">
+        <div class="quiz-question">How are your weekdays?</div>
+        <div class="quiz-sub">Helps us time recommendations right.</div>
+        <div class="quiz-big-btn" onclick="quizSelectSingle(this, 'b-week')">
+          <span class="btn-emoji">🏢</span>
+          <div class="btn-text"><div class="btn-label">At the office</div></div>
+          <div class="btn-check"></div>
+        </div>
+        <div class="quiz-big-btn" onclick="quizSelectSingle(this, 'b-week')">
+          <span class="btn-emoji">🏠</span>
+          <div class="btn-text"><div class="btn-label">Working from home</div></div>
+          <div class="btn-check"></div>
+        </div>
+        <div class="quiz-big-btn" onclick="quizSelectSingle(this, 'b-week')">
+          <span class="btn-emoji">🚗</span>
+          <div class="btn-text"><div class="btn-label">On the move</div></div>
+          <div class="btn-check"></div>
+        </div>
+        <div class="quiz-big-btn" onclick="quizSelectSingle(this, 'b-week')">
+          <span class="btn-emoji">🌊</span>
+          <div class="btn-text"><div class="btn-label">Flexible schedule</div></div>
+          <div class="btn-check"></div>
+        </div>
+      </div>
+      <!-- B Step 3 -->
+      <div class="step hidden-right" id="bStep3" style="padding:0 20px;">
+        <div class="quiz-question">Who do you usually shop for?</div>
+        <div class="quiz-sub">Pick all that apply.</div>
+        <div class="quiz-big-btn" onclick="quizSelect(this, 'b-who', 'self')">
+          <span class="btn-emoji">🙋</span>
+          <div class="btn-text"><div class="btn-label">Myself</div></div>
+          <div class="btn-check"></div>
+        </div>
+        <div class="quiz-big-btn" onclick="quizSelect(this, 'b-who', 'gift')">
+          <span class="btn-emoji">🎁</span>
+          <div class="btn-text"><div class="btn-label">Gift for someone</div></div>
+          <div class="btn-check"></div>
+        </div>
+        <div class="quiz-big-btn" onclick="quizSelect(this, 'b-who', 'family')">
+          <span class="btn-emoji">👨‍👩‍👧</span>
+          <div class="btn-text"><div class="btn-label">Family activity</div></div>
+          <div class="btn-check"></div>
+        </div>
+        <div class="quiz-big-btn" onclick="quizSelect(this, 'b-who', 'friends')">
+          <span class="btn-emoji">👯</span>
+          <div class="btn-text"><div class="btn-label">With friends</div></div>
+          <div class="btn-check"></div>
+        </div>
+      </div>
+      <!-- B Step 4 — confirmation -->
+      <div class="step hidden-right" id="bStep4" style="padding:0 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;">
+        <div style="font-size:52px;">🎉</div>
+        <div style="font-size:22px;font-weight:800;color:var(--text);">You're all set!</div>
+        <div style="font-size:14px;color:var(--gray-500);line-height:1.5;">Your feed is personalizing now. Deals picked just for you will start showing up.</div>
+      </div>
+    </div>
+    <div class="sheet-footer">
+      <button class="btn-primary" id="bCtaBtn" onclick="handleBCta()">Continue</button>
+      <div class="btn-skip" onclick="handleBSkip()">Skip this step</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       VARIANT C — ALL IN ONE
+  ════════════════════════════════════════ -->
+  <div class="bottom-sheet" id="sheetC">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title">Your preferences</div>
+      <div class="sheet-sub">Set once, works forever. Change anytime in Profile.</div>
+      <button class="close-btn" onclick="closeVariant('C')">✕</button>
+    </div>
+    <div class="steps-wrap" style="margin-top:12px;">
+      <div class="step visible" style="padding:0 20px;">
+        <div class="aio-section">
+          <div class="aio-section-title">Household</div>
+          <div class="toggle-row">
+            <span class="toggle-label">I have kids</span>
+            <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">I have a partner</span>
+            <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">I have pets</span>
+            <div class="toggle-switch" onclick="this.classList.toggle('on')"></div>
+          </div>
+        </div>
+        <div class="aio-section">
+          <div class="aio-section-title">Work schedule</div>
+          <div class="aio-chips">
+            <div class="aio-chip" onclick="this.classList.toggle('selected')">At the office</div>
+            <div class="aio-chip" onclick="this.classList.toggle('selected')">From home</div>
+            <div class="aio-chip" onclick="this.classList.toggle('selected')">On the move</div>
+            <div class="aio-chip" onclick="this.classList.toggle('selected')">Flexible</div>
+          </div>
+        </div>
+        <div class="aio-section">
+          <div class="aio-section-title">I browse for</div>
+          <div class="aio-chips">
+            <div class="aio-chip" onclick="this.classList.toggle('selected')">Myself</div>
+            <div class="aio-chip" onclick="this.classList.toggle('selected')">Gifts</div>
+            <div class="aio-chip" onclick="this.classList.toggle('selected')">Date nights</div>
+            <div class="aio-chip" onclick="this.classList.toggle('selected')">Family</div>
+            <div class="aio-chip" onclick="this.classList.toggle('selected')">Friends</div>
+            <div class="aio-chip" onclick="this.classList.toggle('selected')">Work team</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sheet-footer">
+      <button class="btn-primary" onclick="completeFlow()">Save Preferences</button>
+      <div class="btn-skip" onclick="closeVariant('C')">Skip for now</div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       VARIANT D — VIBE CHECK
+  ════════════════════════════════════════ -->
+  <div class="bottom-sheet" id="sheetD">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title">What's your vibe?</div>
+      <div class="sheet-sub">Pick up to 3 — we'll build your feed around them.</div>
+      <button class="close-btn" onclick="closeVariant('D')">✕</button>
+    </div>
+    <div class="steps-wrap" style="margin-top:12px;">
+      <div class="step visible" style="padding:0 20px;">
+        <div class="vibe-counter" id="vibeCounter">Pick up to <span>3</span></div>
+        <div class="vibe-grid">
+          <div class="vibe-tile" onclick="toggleVibe(this)">
+            <div class="vibe-check"></div>
+            <div class="vibe-emoji">🧘</div>
+            <div class="vibe-label">Wellness</div>
+          </div>
+          <div class="vibe-tile" onclick="toggleVibe(this)">
+            <div class="vibe-check"></div>
+            <div class="vibe-emoji">🎉</div>
+            <div class="vibe-label">Going out</div>
+          </div>
+          <div class="vibe-tile" onclick="toggleVibe(this)">
+            <div class="vibe-check"></div>
+            <div class="vibe-emoji">👨‍👩‍👧</div>
+            <div class="vibe-label">Family time</div>
+          </div>
+          <div class="vibe-tile" onclick="toggleVibe(this)">
+            <div class="vibe-check"></div>
+            <div class="vibe-emoji">🌮</div>
+            <div class="vibe-label">Foodie</div>
+          </div>
+          <div class="vibe-tile" onclick="toggleVibe(this)">
+            <div class="vibe-check"></div>
+            <div class="vibe-emoji">🏃</div>
+            <div class="vibe-label">Active</div>
+          </div>
+          <div class="vibe-tile" onclick="toggleVibe(this)">
+            <div class="vibe-check"></div>
+            <div class="vibe-emoji">🎭</div>
+            <div class="vibe-label">Culture</div>
+          </div>
+          <div class="vibe-tile" onclick="toggleVibe(this)">
+            <div class="vibe-check"></div>
+            <div class="vibe-emoji">💆</div>
+            <div class="vibe-label">Self-care</div>
+          </div>
+          <div class="vibe-tile" onclick="toggleVibe(this)">
+            <div class="vibe-check"></div>
+            <div class="vibe-emoji">🎁</div>
+            <div class="vibe-label">Gifter</div>
+          </div>
+          <div class="vibe-tile" onclick="toggleVibe(this)">
+            <div class="vibe-check"></div>
+            <div class="vibe-emoji">💼</div>
+            <div class="vibe-label">Work perks</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sheet-footer">
+      <button class="btn-primary" onclick="completeFlow()">Done</button>
+      <div class="btn-skip" onclick="closeVariant('D')">Skip</div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">Got it ✓ — your feed is updating</div>
+
+  <!-- ════════════════════════════════════════
+       CATEGORY PAGE
+  ════════════════════════════════════════ -->
+  <div class="cat-page" id="catPage">
+
+    <!-- Header -->
+    <div class="cat-header">
+      <div class="cat-back" onclick="closeCategoryPage()">←</div>
+      <div class="cat-search">
+        <span style="color:#bbb;font-size:15px;">⌕</span>
+        <span style="flex:1;">Search Botox</span>
+        <span class="cat-search-loc">New York, NY</span>
+      </div>
+    </div>
+
+    <!-- Section title bar -->
+    <div class="cat-section-bar">
+      <div class="cat-section-title-text">
+        Food &amp; Drink in New York, NY <span style="font-size:12px;">▾</span>
+      </div>
+      <div class="cat-section-icons">
+        <div class="cat-icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+        </div>
+        <div class="cat-icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feed -->
+    <div class="cat-feed" id="catFeed">
+
+      <!-- Deal 1 — Costco -->
+      <div class="cat-deal-card">
+        <div class="cat-deal-img">
+          <div class="cat-deal-img-placeholder" style="background:linear-gradient(160deg,#e8e8e8 0%,#c8c8c8 100%);display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:48px;font-weight:900;color:#c00;letter-spacing:-2px;font-style:italic;">COSTCO</span>
+          </div>
+          <div class="cat-badge book">📅 Book Online</div>
+          <div class="cat-deal-heart">🤍</div>
+          <div class="cat-badge trending">📈 Trending</div>
+          <div class="cat-carousel-dots">
+            <span class="active"></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="cat-deal-body">
+          <div class="cat-deal-title">1-Year Gold Star or Executive Membership + $45 Costco Shop Card Offer</div>
+          <div class="cat-deal-locs">622 locations</div>
+          <div class="cat-deal-price-row">
+            <div class="cat-price-option">
+              <span>Costco Gold Star Membership + $45 Digital Costco S…</span>
+              <span class="price">$65 ›</span>
+            </div>
+            <div class="cat-price-option">
+              <span>Costco Executive Membership + $45 Digital Costco S…</span>
+              <span class="price">$130 ›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deal 2 — Restaurant -->
+      <div class="cat-deal-card">
+        <div class="cat-deal-img">
+          <div class="cat-deal-img-placeholder" style="background:linear-gradient(135deg,#c0392b,#922b21);display:flex;align-items:flex-end;padding:12px;">
+            <span style="font-size:13px;font-weight:800;color:#fff;line-height:1.3;">Peter Luger<br>Steak House</span>
+          </div>
+          <div class="cat-badge popular">🎁 Popular Gift</div>
+          <div class="cat-deal-heart">🤍</div>
+          <div class="cat-carousel-dots">
+            <span class="active"></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="cat-deal-body">
+          <div class="cat-deal-title">NYC Steakhouse: Prix Fixe Dinner for 2 with Wine Pairing</div>
+          <div class="cat-deal-price-row">
+            <div class="cat-price-option">
+              <span>Dinner for 2 + House Wine</span>
+              <span class="price">$129 ›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deal 3 — Cooking class -->
+      <div class="cat-deal-card">
+        <div class="cat-deal-img">
+          <div class="cat-deal-img-placeholder" style="background:linear-gradient(135deg,#e67e22,#d35400);display:flex;align-items:center;justify-content:center;font-size:52px;">🍝</div>
+          <div class="cat-badge book">📅 Book Online</div>
+          <div class="cat-deal-heart">🤍</div>
+        </div>
+        <div class="cat-deal-body">
+          <div class="cat-deal-title">Italian Cooking Masterclass — Make Fresh Pasta + Full Meal</div>
+          <div class="cat-deal-price-row">
+            <div class="cat-price-option">
+              <span>1 person (includes meal + wine)</span>
+              <span class="price">$55 ›</span>
+            </div>
+            <div class="cat-price-option">
+              <span>2 people (date night package)</span>
+              <span class="price">$99 ›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── INLINE PREFERENCE CARD (position 4) ── -->
+      <div class="inline-pref-wrap" id="inlinePrefWrap">
+        <div class="inline-pref-card">
+          <div class="inline-pref-top">
+            <div class="inline-pref-label">✦ Personalize your feed</div>
+            <div class="inline-pref-close" onclick="dismissInlineCard()">✕</div>
+          </div>
+          <div class="inline-pref-body" id="inlinePrefBody">
+            <div class="inline-pref-q">What kind of dining are you into?</div>
+            <div class="inline-pref-pills">
+              <div class="inline-pref-pill" onclick="answerInlineCard(this)">Casual eats</div>
+              <div class="inline-pref-pill" onclick="answerInlineCard(this)">Fine dining</div>
+              <div class="inline-pref-pill" onclick="answerInlineCard(this)">Date night</div>
+              <div class="inline-pref-pill" onclick="answerInlineCard(this)">Takeout &amp; delivery</div>
+              <div class="inline-pref-pill" onclick="answerInlineCard(this)">Brunch</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deal 5 — Omakase -->
+      <div class="cat-deal-card">
+        <div class="cat-deal-img">
+          <div class="cat-deal-img-placeholder" style="background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;font-size:52px;">🍣</div>
+          <div class="cat-badge trending">📈 Trending</div>
+          <div class="cat-deal-heart">🤍</div>
+        </div>
+        <div class="cat-deal-body">
+          <div class="cat-deal-title">Omakase Experience at Sakura — 12-Course Chef's Tasting</div>
+          <div class="cat-deal-price-row">
+            <div class="cat-price-option">
+              <span>Per person (reservations required)</span>
+              <span class="price">$89 ›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deal 6 — Wine -->
+      <div class="cat-deal-card">
+        <div class="cat-deal-img">
+          <div class="cat-deal-img-placeholder" style="background:linear-gradient(135deg,#6c3483,#8e44ad);display:flex;align-items:center;justify-content:center;font-size:52px;">🍷</div>
+          <div class="cat-badge popular">🎁 Popular Gift</div>
+          <div class="cat-deal-heart">🤍</div>
+        </div>
+        <div class="cat-deal-body">
+          <div class="cat-deal-title">Brooklyn Winery: Tour + Tasting Flight for 2</div>
+          <div class="cat-deal-price-row">
+            <div class="cat-price-option">
+              <span>Tour + 4-wine tasting for 2</span>
+              <span class="price">$45 ›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deal 7 — Brunch -->
+      <div class="cat-deal-card">
+        <div class="cat-deal-img">
+          <div class="cat-deal-img-placeholder" style="background:linear-gradient(135deg,#f39c12,#e67e22);display:flex;align-items:center;justify-content:center;font-size:52px;">🥞</div>
+          <div class="cat-badge book">📅 Book Online</div>
+          <div class="cat-deal-heart">🤍</div>
+        </div>
+        <div class="cat-deal-body">
+          <div class="cat-deal-title">Bottomless Brunch for 2 — Mimosas + Full Menu at The Smith</div>
+          <div class="cat-deal-price-row">
+            <div class="cat-price-option">
+              <span>Brunch for 2 (90 min)</span>
+              <span class="price">$69 ›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /cat-feed -->
+  </div><!-- /cat-page -->
+
+</div><!-- /phone -->
+  <div class="device-home"></div>
+</div><!-- /device-frame -->
+
+<script>
+// ─── State ────────────────────────────────────────────
+let currentVariant = 'A';
+let pendingVariant = 'A';
+let aStep = 1;
+let bStep = 1;
+const MAX_VIBES = 3;
+
+// ─── Variant picker ───────────────────────────────────
+function openVariantPicker() {
+  // Instantly dismiss any open feature sheet (skip close animation)
+  ['A','B','C','D'].forEach(v => {
+    const s = document.getElementById('sheet' + v);
+    if (s.classList.contains('open')) {
+      s.style.transition = 'none';
+      s.classList.remove('open');
+      requestAnimationFrame(() => { s.style.transition = ''; });
+    }
+  });
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('feed').classList.add('blurred');
+  document.getElementById('variantPicker').classList.add('open');
+  updatePickerRadios();
+}
+
+function selectVariant(v) {
+  pendingVariant = v;
+  updatePickerRadios();
+}
+
+function updatePickerRadios() {
+  ['A','B','C','D','E','F','G','H','I'].forEach(v => {
+    const el = document.getElementById('radio' + v);
+    if (el) el.className = 'variant-radio' + (v === pendingVariant ? ' selected' : '');
+  });
+}
+
+function launchSelectedVariant() {
+  currentVariant = pendingVariant;
+  closeAll(false);
+  const inlineVariants = ['E','F','G','H','I'];
+  if (inlineVariants.includes(currentVariant)) {
+    // Reset inline card state then open category page with chosen variant
+    inlineAnswered = false;
+    renderInlineVariant(currentVariant);
+    setTimeout(() => openCategoryPage(), 80);
+  } else {
+    setTimeout(() => openVariant(currentVariant), 80);
+  }
+}
+
+// ─── Open / close sheets ──────────────────────────────
+function show(id) {
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('feed').classList.add('blurred');
+  document.getElementById(id).classList.add('open');
+}
+
+function openVariant(v) {
+  resetVariant(v);
+  show('sheet' + v);
+}
+
+function closeVariant(v) {
+  document.getElementById('sheet' + v).classList.remove('open');
+  document.getElementById('overlay').classList.remove('active');
+  document.getElementById('feed').classList.remove('blurred');
+}
+
+function closeAll(resetFeed = true) {
+  ['A','B','C','D'].forEach(v => document.getElementById('sheet' + v).classList.remove('open'));
+  document.getElementById('variantPicker').classList.remove('open');
+  document.getElementById('overlay').classList.remove('active');
+  if (resetFeed) document.getElementById('feed').classList.remove('blurred');
+}
+
+// ─── Variant A logic ──────────────────────────────────
+function resetVariant(v) {
+  if (v === 'A') {
+    aStep = 1;
+    document.getElementById('aStep1').className = 'step visible';
+    document.getElementById('aStep2').className = 'step hidden-right';
+    document.getElementById('aStepLabel').textContent = '1 of 2';
+    document.getElementById('aTitle').textContent = 'Help us get to know you';
+    document.getElementById('aSub').textContent = 'Quick question so we stop showing you stuff you don\'t care about.';
+    document.getElementById('aCtaBtn').textContent = 'Next';
+    document.querySelectorAll('#sheetA .pill.selected').forEach(p => p.classList.remove('selected'));
+    document.querySelectorAll('#sheetA .who-card.selected').forEach(c => c.classList.remove('selected'));
+  }
+  if (v === 'B') {
+    bStep = 1;
+    ['bStep1','bStep2','bStep3','bStep4'].forEach((id,i) => {
+      document.getElementById(id).className = 'step ' + (i === 0 ? 'visible' : 'hidden-right');
+    });
+    document.getElementById('bProgress').style.width = '25%';
+    document.getElementById('bStepLabel').textContent = 'Step 1 of 4';
+    document.getElementById('bCtaBtn').textContent = 'Continue';
+    document.querySelectorAll('#sheetB .quiz-big-btn.selected').forEach(b => b.classList.remove('selected'));
+    document.querySelector('#sheetB .sheet-footer .btn-skip').style.display = '';
+  }
+  if (v === 'C') {
+    document.querySelectorAll('#sheetC .toggle-switch.on').forEach(t => t.classList.remove('on'));
+    document.querySelectorAll('#sheetC .aio-chip.selected').forEach(c => c.classList.remove('selected'));
+  }
+  if (v === 'D') {
+    document.querySelectorAll('#sheetD .vibe-tile.selected').forEach(t => t.classList.remove('selected'));
+    document.querySelectorAll('#sheetD .vibe-tile.disabled').forEach(t => t.classList.remove('disabled'));
+    document.getElementById('vibeCounter').innerHTML = 'Pick up to <span>3</span>';
+  }
+}
+
+function handleACta() {
+  if (aStep === 1) {
+    aStep = 2;
+    document.getElementById('aStep1').className = 'step hidden-left';
+    document.getElementById('aStep2').className = 'step visible';
+    document.getElementById('aStepLabel').textContent = '2 of 2';
+    document.getElementById('aTitle').textContent = 'Who do you usually browse for?';
+    document.getElementById('aSub').textContent = 'Pick all that apply — you can always change this later.';
+    document.getElementById('aCtaBtn').textContent = 'Done';
+  } else {
+    closeVariant('A');
+    showToast();
+  }
+}
+
+function handleASkip() {
+  if (aStep === 1) { handleACta(); }
+  else { closeVariant('A'); }
+}
+
+// ─── Variant B logic ──────────────────────────────────
+function handleBCta() {
+  if (bStep < 4) {
+    const prev = document.getElementById('bStep' + bStep);
+    bStep++;
+    const next = document.getElementById('bStep' + bStep);
+    prev.className = 'step hidden-left';
+    next.className = 'step visible';
+    document.getElementById('bProgress').style.width = (bStep * 25) + '%';
+    document.getElementById('bStepLabel').textContent = 'Step ' + bStep + ' of 4';
+    if (bStep === 4) {
+      document.getElementById('bCtaBtn').textContent = 'Done';
+      document.querySelector('#sheetB .sheet-footer .btn-skip').style.display = 'none';
+    }
+  } else {
+    closeVariant('B');
+    showToast();
+  }
+}
+
+function handleBSkip() {
+  handleBCta();
+}
+
+function quizSelect(el, group, val) {
+  // multi-select within group
+  el.classList.toggle('selected');
+}
+
+function quizSelectSingle(el, group) {
+  // single-select: deselect siblings
+  const parent = el.parentElement;
+  parent.querySelectorAll('.quiz-big-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ─── Pill / card helpers ──────────────────────────────
+function togglePill(el) {
+  if (el.dataset.group === 'have') {
+    document.querySelector('[data-val="none"]').classList.remove('selected');
+  }
+  el.classList.toggle('selected');
+}
+
+function togglePillNone(el) {
+  document.querySelectorAll('[data-group="have"]:not([data-val="none"])').forEach(p => p.classList.remove('selected'));
+  el.classList.toggle('selected');
+}
+
+function toggleCard(el) { el.classList.toggle('selected'); }
+
+// ─── Variant D — vibe ─────────────────────────────────
+function toggleVibe(el) {
+  const tiles = document.querySelectorAll('#sheetD .vibe-tile');
+  const selected = document.querySelectorAll('#sheetD .vibe-tile.selected');
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+  } else {
+    if (selected.length >= MAX_VIBES) return;
+    el.classList.add('selected');
+  }
+  const now = document.querySelectorAll('#sheetD .vibe-tile.selected').length;
+  const remaining = MAX_VIBES - now;
+  document.getElementById('vibeCounter').innerHTML = remaining > 0
+    ? 'Pick up to <span>' + remaining + '</span> more'
+    : '<span style="color:var(--green)">✓ All 3 picked!</span>';
+  // grey out unselected when max reached
+  tiles.forEach(t => {
+    if (!t.classList.contains('selected')) {
+      t.classList.toggle('disabled', now >= MAX_VIBES);
+    }
+  });
+}
+
+// ─── Toast ────────────────────────────────────────────
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function completeFlow() {
+  closeAll();
+  showToast();
+}
+
+// ─── Overlay click ────────────────────────────────────
+document.getElementById('overlay').addEventListener('click', closeAll);
+
+// ─── Swipe-to-dismiss on all sheets ──────────────────
+document.querySelectorAll('.bottom-sheet').forEach(sheet => {
+  let startY = 0;
+  sheet.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+  sheet.addEventListener('touchend', e => {
+    if (e.changedTouches[0].clientY - startY > 60) closeAll();
+  }, { passive: true });
+});
+
+// ─── Inline card variant templates ────────────────────
+const INLINE_TEMPLATES = {
+  E: `
+    <div class="inline-pref-top">
+      <div class="inline-pref-label">✦ Personalize your feed</div>
+      <div class="inline-pref-close" onclick="dismissInlineCard()">✕</div>
+    </div>
+    <div class="inline-pref-body" id="inlinePrefBody">
+      <div class="inline-pref-q">What kind of dining are you into?</div>
+      <div class="inline-pref-pills">
+        <div class="inline-pref-pill" onclick="answerInlineCard(this)">Casual eats</div>
+        <div class="inline-pref-pill" onclick="answerInlineCard(this)">Fine dining</div>
+        <div class="inline-pref-pill" onclick="answerInlineCard(this)">Date night</div>
+        <div class="inline-pref-pill" onclick="answerInlineCard(this)">Takeout &amp; delivery</div>
+        <div class="inline-pref-pill" onclick="answerInlineCard(this)">Brunch</div>
+      </div>
+    </div>`,
+
+  F: `
+    <div class="inline-pref-top">
+      <div class="inline-pref-label">✦ Quick pick</div>
+      <div class="inline-pref-close" onclick="dismissInlineCard()">✕</div>
+    </div>
+    <div class="inline-pref-body" id="inlinePrefBody">
+      <div class="inline-pref-q" style="margin-bottom:12px;">What's your dining mood?</div>
+      <div class="single-tap-grid">
+        <div class="single-tap-tile" onclick="singleTapAnswer(this)">
+          <span class="st-emoji">🍕</span><span class="st-label">Casual &amp; fun</span>
+        </div>
+        <div class="single-tap-tile" onclick="singleTapAnswer(this)">
+          <span class="st-emoji">🥂</span><span class="st-label">Fine dining</span>
+        </div>
+        <div class="single-tap-tile" onclick="singleTapAnswer(this)">
+          <span class="st-emoji">🌯</span><span class="st-label">Quick &amp; easy</span>
+        </div>
+        <div class="single-tap-tile" onclick="singleTapAnswer(this)">
+          <span class="st-emoji">💑</span><span class="st-label">Date night</span>
+        </div>
+      </div>
+    </div>`,
+
+  G: `
+    <div class="inline-pref-top">
+      <div class="inline-pref-label">✦ Set your flavor profile</div>
+      <div class="inline-pref-close" onclick="dismissInlineCard()">✕</div>
+    </div>
+    <div class="inline-pref-body" id="inlinePrefBody">
+      <div class="inline-pref-q" style="margin-bottom:14px;">How adventurous are you feeling?</div>
+      <div class="emoji-slider-wrap">
+        <div class="emoji-endpoints"><span>🥗</span><span>🍣</span><span>🌶️</span><span>🔥</span></div>
+        <div class="slider-track" id="sliderTrack" onclick="sliderClick(event)">
+          <div class="slider-fill" id="sliderFill"></div>
+          <div class="slider-thumb" id="sliderThumb"></div>
+        </div>
+        <div class="slider-labels"><span>Safe picks</span><span>Adventurous</span></div>
+      </div>
+      <button class="slider-confirm-btn" onclick="sliderConfirm()">Looks good →</button>
+    </div>`,
+
+  H: `
+    <div class="inline-pref-top">
+      <div class="inline-pref-label">✦ Who eats like you?</div>
+      <div class="inline-pref-close" onclick="dismissInlineCard()">✕</div>
+    </div>
+    <div class="inline-pref-body" id="inlinePrefBody">
+      <div class="inline-pref-q" style="margin-bottom:10px;">Pick the one most like you</div>
+      <div class="persona-list">
+        <div class="persona-card" onclick="personaAnswer(this)">
+          <div class="persona-avatar">👩</div>
+          <div class="persona-text">
+            <div class="persona-name">Sarah, 34</div>
+            <div class="persona-desc">Date nights &amp; fine dining on weekends</div>
+          </div>
+        </div>
+        <div class="persona-card" onclick="personaAnswer(this)">
+          <div class="persona-avatar">🧑</div>
+          <div class="persona-text">
+            <div class="persona-name">Marcus, 28</div>
+            <div class="persona-desc">Street food, new spots, always exploring</div>
+          </div>
+        </div>
+        <div class="persona-card" onclick="personaAnswer(this)">
+          <div class="persona-avatar">👨‍👩‍👧</div>
+          <div class="persona-text">
+            <div class="persona-name">The Garcias</div>
+            <div class="persona-desc">Family-friendly, easy menus, good value</div>
+          </div>
+        </div>
+      </div>
+    </div>`,
+
+  I: `
+    <div class="inline-pref-top">
+      <div class="inline-pref-label">✦ 2 quick questions</div>
+      <div class="inline-pref-close" onclick="dismissInlineCard()">✕</div>
+    </div>
+    <div class="inline-pref-body" id="inlinePrefBody">
+      <div class="mini-step-dots">
+        <div class="mini-dot active" id="miniDot0"></div>
+        <div class="mini-dot" id="miniDot1"></div>
+      </div>
+      <div class="mini-step active" id="miniStep0">
+        <div class="inline-pref-q" style="font-size:14px;margin-bottom:8px;">What's your dining style?</div>
+        <div class="mini-options">
+          <div class="mini-option" onclick="miniAnswer(0, this)"><span class="mo-emoji">🍕</span> Casual &amp; relaxed</div>
+          <div class="mini-option" onclick="miniAnswer(0, this)"><span class="mo-emoji">🥂</span> Fine dining</div>
+          <div class="mini-option" onclick="miniAnswer(0, this)"><span class="mo-emoji">🌮</span> Street food &amp; quick bites</div>
+        </div>
+      </div>
+      <div class="mini-step" id="miniStep1">
+        <div class="inline-pref-q" style="font-size:14px;margin-bottom:8px;">Usually dining…</div>
+        <div class="mini-options">
+          <div class="mini-option" onclick="miniAnswer(1, this)"><span class="mo-emoji">🙋</span> Solo</div>
+          <div class="mini-option" onclick="miniAnswer(1, this)"><span class="mo-emoji">💑</span> With a partner</div>
+          <div class="mini-option" onclick="miniAnswer(1, this)"><span class="mo-emoji">👨‍👩‍👧</span> With family</div>
+          <div class="mini-option" onclick="miniAnswer(1, this)"><span class="mo-emoji">👯</span> With friends</div>
+        </div>
+      </div>
+    </div>`
+};
+
+function renderInlineVariant(v) {
+  const card = document.querySelector('#inlinePrefWrap .inline-pref-card');
+  card.innerHTML = INLINE_TEMPLATES[v] || INLINE_TEMPLATES['E'];
+  // Restore wrap visibility
+  document.getElementById('inlinePrefWrap').classList.remove('vanished');
+  // Init slider if variant G
+  if (v === 'G') initSlider();
+}
+
+// ─── Category page ────────────────────────────────────
+let inlineAnswered = false;
+
+function openCategoryPage() {
+  closeAll();
+  document.getElementById('catPage').classList.add('open');
+  document.getElementById('navCategories').classList.add('active');
+  document.getElementById('navCategories').querySelector('svg').setAttribute('stroke', '#00A046');
+  document.getElementById('navExplore').classList.remove('active');
+  document.getElementById('navExplore').querySelector('svg').setAttribute('stroke', '#888');
+}
+
+function closeCategoryPage() {
+  document.getElementById('catPage').classList.remove('open');
+  document.getElementById('navExplore').classList.add('active');
+  document.getElementById('navExplore').querySelector('svg').setAttribute('stroke', '#00A046');
+  document.getElementById('navCategories').classList.remove('active');
+  document.getElementById('navCategories').querySelector('svg').setAttribute('stroke', '#888');
+}
+
+function answerInlineCard(pill) {
+  if (inlineAnswered) return;
+  inlineAnswered = true;
+  // Highlight selection
+  pill.classList.add('selected');
+  // Swap body to thanks message
+  setTimeout(() => {
+    document.getElementById('inlinePrefBody').innerHTML =
+      '<div class="inline-pref-thanks">✓ Got it — updating your Food &amp; Drink feed!</div>';
+    // Collapse after brief moment
+    setTimeout(() => dismissInlineCard(), 900);
+  }, 250);
+}
+
+function dismissInlineCard() {
+  const wrap = document.getElementById('inlinePrefWrap');
+  wrap.classList.add('vanished');
+}
+
+// ─── Variant F: Single Tap ────────────────────────────
+function singleTapAnswer(tile) {
+  if (inlineAnswered) return;
+  inlineAnswered = true;
+  tile.classList.add('selected');
+  setTimeout(() => dismissInlineCard(), 400);
+}
+
+// ─── Variant G: Emoji Slider ──────────────────────────
+let sliderValue = 0.5;
+
+function initSlider() {
+  sliderValue = 0.5;
+  updateSliderUI(sliderValue);
+  const track = document.getElementById('sliderTrack');
+  if (!track) return;
+
+  let dragging = false;
+
+  function getPos(e) {
+    const rect = track.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  }
+
+  track.addEventListener('mousedown', e => { dragging = true; sliderValue = getPos(e); updateSliderUI(sliderValue); });
+  track.addEventListener('touchstart', e => { dragging = true; sliderValue = getPos(e); updateSliderUI(sliderValue); }, { passive: true });
+
+  document.addEventListener('mousemove', e => { if (!dragging) return; sliderValue = getPos(e); updateSliderUI(sliderValue); });
+  document.addEventListener('touchmove', e => { if (!dragging) return; sliderValue = getPos(e); updateSliderUI(sliderValue); }, { passive: true });
+
+  document.addEventListener('mouseup', () => { dragging = false; });
+  document.addEventListener('touchend', () => { dragging = false; });
+}
+
+function updateSliderUI(v) {
+  const fill = document.getElementById('sliderFill');
+  const thumb = document.getElementById('sliderThumb');
+  if (!fill || !thumb) return;
+  fill.style.width = (v * 100) + '%';
+  thumb.style.left = (v * 100) + '%';
+}
+
+function sliderClick(e) {
+  const track = document.getElementById('sliderTrack');
+  if (!track) return;
+  const rect = track.getBoundingClientRect();
+  sliderValue = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  updateSliderUI(sliderValue);
+}
+
+function sliderConfirm() {
+  if (inlineAnswered) return;
+  inlineAnswered = true;
+  const body = document.getElementById('inlinePrefBody');
+  if (body) body.innerHTML = '<div class="inline-pref-thanks">✓ Got it — dialing in your feed!</div>';
+  setTimeout(() => dismissInlineCard(), 900);
+}
+
+// ─── Variant H: Persona Answer ────────────────────────
+function personaAnswer(card) {
+  if (inlineAnswered) return;
+  inlineAnswered = true;
+  card.classList.add('selected');
+  setTimeout(() => {
+    const body = document.getElementById('inlinePrefBody');
+    if (body) body.innerHTML = '<div class="inline-pref-thanks">✓ Personalizing your feed!</div>';
+    setTimeout(() => dismissInlineCard(), 900);
+  }, 300);
+}
+
+// ─── Variant I: Mini 2-step ───────────────────────────
+function miniAnswer(step, option) {
+  if (inlineAnswered) return;
+  option.classList.add('selected');
+
+  if (step === 0) {
+    // Advance to step 2
+    setTimeout(() => {
+      document.getElementById('miniStep0').classList.remove('active');
+      document.getElementById('miniStep1').classList.add('active');
+      document.getElementById('miniDot0').classList.remove('active');
+      document.getElementById('miniDot1').classList.add('active');
+    }, 200);
+  } else {
+    // Step 2 answered — done
+    inlineAnswered = true;
+    setTimeout(() => {
+      const body = document.getElementById('inlinePrefBody');
+      if (body) body.innerHTML = '<div class="inline-pref-thanks">✓ All set — feed updated!</div>';
+      setTimeout(() => dismissInlineCard(), 900);
+    }, 300);
+  }
+}
+
+// ─── Auto-trigger A on load ──────────────────────────
+setTimeout(() => openVariant('A'), 1800);
+</script>
+</body>
+</html>
